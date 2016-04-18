@@ -30,7 +30,7 @@
 (defn word-first-char-in-cube? [word]
   (not (= -1 (.indexOf (first-chars) (get (clojure.string/upper-case word) 0)))))
 
-(defn remove-nonexistant-words []
+(defn get-words-with-existing-first-char [words]
   ())
 
 (defn get-char-at-coord [z x y]

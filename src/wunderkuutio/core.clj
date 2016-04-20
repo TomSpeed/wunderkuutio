@@ -1,5 +1,7 @@
 (ns wunderkuutio.core)
 
+(defonce words (atom '()))
+
 (defn read-cube-file []
   (slurp (clojure.java.io/resource "cube.txt")))
 
@@ -23,18 +25,20 @@
 
 (def cube create-cube)
 
-(def first-chars get-distinct-chars-from-cube)
+(defn get-char-at-coord [z x y]
+  (get (get (nth (cube) z) y) x))
 
-(def words create-word-list)
+(def first-chars get-distinct-chars-from-cube)
 
 (defn word-first-char-in-cube? [word]
   (not (= -1 (.indexOf (first-chars) (get (clojure.string/upper-case word) 0)))))
 
-(defn get-words-with-existing-first-char [words]
-  ())
+(defn get-words-with-existing-first-char [words-from-file]
+  (filter (fn [x] (word-first-char-in-cube? x)) words-from-file))
 
-(defn get-char-at-coord [z x y]
-  (get (get (nth (cube) z) y) x))
+(defn initiate []
+  (reset! words '())
+  (swap! words concat (get-words-with-existing-first-char(create-word-list))))
 
-
-
+(defn -main[& args]
+  (initiate))

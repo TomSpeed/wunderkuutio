@@ -45,13 +45,16 @@
         y (get coord 2)]
     (get (get (nth cube z) y) x)))
 
-(def first-chars (get-distinct-chars-from-cube))
+(def cube-chars (get-distinct-chars-from-cube))
 
-(defn word-first-char-in-cube? [word]
-  (not (= -1 (.indexOf first-chars (get (clojure.string/upper-case word) 0)))))
+(defn char-in-cube? [c]
+  (not (= -1 (.indexOf cube-chars (get (clojure.string/upper-case c) 0)))))
 
-(defn get-words-with-existing-first-char [words-from-file]
-  (filter (fn [x] (word-first-char-in-cube? x)) words-from-file))
+(defn word-chars-in-cube? [word]
+  (every? #(char-in-cube? %) word))
+
+(defn get-word-with-existing-chars [words-from-file]
+  (filter (fn [x] (word-chars-in-cube? x)) words-from-file))
 
 (defn vector-contains-values-out-of-bounds? [v]
  (let [max-dimensions (get-max-dimensions)
@@ -78,7 +81,7 @@
 
 (defn initiate []
   (reset! words '())
-  (swap! words concat (get-words-with-existing-first-char(create-word-list))))
+  (swap! words concat (get-word-with-existing-chars(create-word-list))))
 
 (defn -main[& args]
   (initiate))

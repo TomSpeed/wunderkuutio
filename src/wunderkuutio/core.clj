@@ -54,7 +54,7 @@
   (every? #(char-in-cube? %) word))
 
 (defn get-word-with-existing-chars [words-from-file]
-  (filter (fn [x] (word-chars-in-cube? x)) words-from-file))
+  (filter #(word-chars-in-cube? %) words-from-file))
 
 (defn vector-contains-values-out-of-bounds? [v]
  (let [max-dimensions (get-max-dimensions)
@@ -79,9 +79,21 @@
   (let [adj-coords (get-adjacent-coords coord)]
   (map get-char-at-coord adj-coords)))
 
+(defn get-words-starting-with-str [s]
+  (filter #(= 0 (.indexOf (clojure.string/upper-case %) (clojure.string/upper-case s))) @words))
+
+(defn str-exists-in-words? [s]
+  (> (count (get-words-starting-with-str s)) 0))
+
+(defn get-words-in-cube []
+  (let [all-coords (get-all-coords (get-max-dimensions))]
+    ;(println (map (fn[x] (map (fn[y](str (get-char-at-coord x) y))(get-adjacent-letters x))) all-coords))
+    ))
+
 (defn initiate []
   (reset! words '())
-  (swap! words concat (get-word-with-existing-chars(create-word-list))))
+  (swap! words concat (get-word-with-existing-chars(create-word-list)))
+  (get-words-in-cube))
 
 (defn -main[& args]
   (initiate))
